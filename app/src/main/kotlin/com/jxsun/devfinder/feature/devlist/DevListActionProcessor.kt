@@ -1,6 +1,6 @@
 package com.jxsun.devfinder.feature.devlist
 
-import com.jxsun.devfinder.core.ActionProcessor
+import com.jxsun.devfinder.base.core.ActionProcessor
 import com.jxsun.devfinder.data.repository.GitHubUserRepository
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer

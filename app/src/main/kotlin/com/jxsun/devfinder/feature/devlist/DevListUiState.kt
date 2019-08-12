@@ -1,6 +1,6 @@
 package com.jxsun.devfinder.feature.devlist
 
-import com.jxsun.devfinder.core.UiState
+import com.jxsun.devfinder.base.core.UiState
 import com.jxsun.devfinder.model.GitHubUser
 
 /**

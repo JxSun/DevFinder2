@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -25,6 +26,14 @@ interface GitHubService {
             @Query("client_id") clientId: String = BuildConfig.CLIENT_ID,
             @Query("client_secret") clientSecret: String = BuildConfig.CLIENT_SECRET
     ): Single<Response<List<UserResponse>>>
+
+    /**
+     * Fetches the user's detailed info.
+     */
+    @GET("users/{username}")
+    fun getUser(
+        @Path("username") loginName: String
+    ): Single<Response<UserDetailResponse>>
 
     /**
      * The factory to create the [GitHubService].

@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#434958</color>
     <color name="colorAccent">#D81B60</color>
     <color name="staffBlue">#3971D5</color>
+    <color name="grey">#58606F</color>
+    <color name="dividerColor">#E3E3E3</color>
 </resources>

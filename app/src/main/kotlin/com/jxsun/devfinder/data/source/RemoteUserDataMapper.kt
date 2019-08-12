@@ -6,12 +6,12 @@ import com.jxsun.devfinder.model.GitHubUser
 /**
  * A mapper which provides mappings between [GitHubUser] and [UserResponse].
  */
-class RemoteDataMapper : Mapper<GitHubUser, UserResponse> {
+class RemoteUserDataMapper : Mapper<GitHubUser, UserResponse> {
 
     override fun toModel(implData: UserResponse): GitHubUser {
         return GitHubUser(
                 id = implData.id,
-                loginName = implData.name,
+                loginName = implData.loginName,
                 avatarUrl = implData.avatarUrl,
                 siteAdmin = implData.siteAdmin
         )
@@ -20,7 +20,7 @@ class RemoteDataMapper : Mapper<GitHubUser, UserResponse> {
     override fun fromModel(model: GitHubUser): UserResponse {
         return UserResponse(
                 id = model.id,
-                name = model.loginName,
+                loginName = model.loginName,
                 avatarUrl = model.avatarUrl,
                 siteAdmin = model.siteAdmin
         )

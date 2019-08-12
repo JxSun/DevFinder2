@@ -4,7 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jxsun.devfinder.core.ViewModelContract
+import com.jxsun.devfinder.base.core.ViewModelContract
 import com.jxsun.devfinder.util.extension.plusAssign
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -19,7 +19,7 @@ import timber.log.Timber
  */
 class DevListViewModel(
         private val actionProcessor: DevListActionProcessor
-) : ViewModel(), ViewModelContract<DevListUiEvent, DevListUiState> {
+) : ViewModelContract<DevListUiEvent, DevListUiState>() {
 
     private val uiEventSubject = PublishSubject.create<DevListUiEvent>()
     private val disposables = CompositeDisposable()

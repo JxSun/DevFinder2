@@ -1,4 +1,4 @@
-package com.jxsun.devfinder.core
+package com.jxsun.devfinder.base.core
 
 import io.reactivex.ObservableTransformer
 

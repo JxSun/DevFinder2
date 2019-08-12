@@ -9,7 +9,7 @@ class DevListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_dev_list)
 
         supportFragmentManager.transaction {
             it.replace(R.id.contentFrame, DevListFragment.newInstance(), DevListFragment.TAG)

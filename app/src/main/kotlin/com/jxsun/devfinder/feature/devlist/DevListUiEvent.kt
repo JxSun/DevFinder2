@@ -1,6 +1,6 @@
 package com.jxsun.devfinder.feature.devlist
 
-import com.jxsun.devfinder.core.UiEvent
+import com.jxsun.devfinder.base.core.UiEvent
 
 /**
  * The concrete UI events for the list page.

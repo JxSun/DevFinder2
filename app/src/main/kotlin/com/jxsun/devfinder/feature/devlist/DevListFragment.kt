@@ -1,16 +1,14 @@
 package com.jxsun.devfinder.feature.devlist
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jxsun.devfinder.R
+import com.jxsun.devfinder.base.BaseFragment
+import com.jxsun.devfinder.feature.devdetail.DevDetailActivity
+import com.jxsun.devfinder.model.GitHubUser
 import com.jxsun.devfinder.model.exception.ClientException
 import com.jxsun.devfinder.model.exception.NoConnectionException
 import com.jxsun.devfinder.model.exception.ServerException
@@ -19,43 +17,42 @@ import kotlinx.android.synthetic.main.fragment_dev_list.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class DevListFragment : Fragment() {
+class DevListFragment : BaseFragment<DevListUiEvent, DevListUiState, DevListViewModel>() {
 
     private val devListViewModel: DevListViewModel by viewModel()
 
     private lateinit var devListAdapter: DevListRecyclerViewAdapter
     private val onScrollListener = OnRecyclerViewScrollListener()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_dev_list, container, false)
-    }
+    override fun bindViewModel(): DevListViewModel = devListViewModel
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun layoutResource(): Int = R.layout.fragment_dev_list
 
+    override fun onInitUi() {
         (activity as AppCompatActivity?)?.setSupportActionBar(toolbar)
 
-        devListAdapter = DevListRecyclerViewAdapter()
+        // setup recycler view
+        devListAdapter = DevListRecyclerViewAdapter().apply {
+            setClickUserListener {
+                showUserDetail(it)
+            }
+        }
         with(devListRecyclerView) {
             adapter = devListAdapter
             layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
             addOnScrollListener(onScrollListener)
         }
 
+        // setup scrolling event binding
         onScrollListener.setReloadAction {
             Timber.v("fire load more event")
             devListViewModel.fireEvent(DevListUiEvent.LoadMoreEvent)
         }
 
-        devListViewModel.state.observe(
-                viewLifecycleOwner,
-                Observer { renderUi(it) }
-        )
-
         devListViewModel.fireEvent(DevListUiEvent.InitialEvent)
     }
 
-    private fun renderUi(uiState: DevListUiState) {
+    override fun renderUi(uiState: DevListUiState) {
         Timber.d("uiState: $uiState")
         if (uiState.isLoading) {
             progressBar.visibility = View.VISIBLE
@@ -83,9 +80,14 @@ class DevListFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
+    private fun showUserDetail(user: GitHubUser) {
+        activity?.let {
+            DevDetailActivity.start(it, user)
+        }
+    }
+
+    override fun onDeinitUi() {
         devListRecyclerView?.adapter = null
-        super.onDestroyView()
     }
 
     companion object {

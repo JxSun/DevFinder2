@@ -1,6 +1,6 @@
 package com.jxsun.devfinder.feature.devlist
 
-import com.jxsun.devfinder.core.Action
+import com.jxsun.devfinder.base.core.Action
 
 /**
  * The concrete business logic action for the list page.

@@ -2,6 +2,7 @@ package com.jxsun.devfinder.data.repository
 
 import com.jxsun.devfinder.data.source.RemoteDataSource
 import com.jxsun.devfinder.model.GitHubUser
+import com.jxsun.devfinder.model.GitHubUserDetail
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -29,11 +30,31 @@ class GitHubUserRepository(
                 }
     }
 
+    fun fetchUserDetail(login: String): Single<FetchUserDetailResult> {
+        return dataSource.getUserDetail(login = login)
+                .subscribeOn(Schedulers.io())
+                .map { response ->
+                    FetchUserDetailResult(
+                            user = response.userDetail
+                    )
+                }
+                .doOnError {
+                    Timber.w(it, "failed to fetch user detail")
+                }
+    }
+
     /**
-     * The fetched result representation.
+     * The fetched user list result representation.
      */
     data class FetchUsersResult(
             val users: List<GitHubUser>,
             val nextSinceIdx: Int
+    )
+
+    /**
+     * The fetched user detailed info result representation.
+     */
+    data class FetchUserDetailResult(
+            val user: GitHubUserDetail
     )
 }
