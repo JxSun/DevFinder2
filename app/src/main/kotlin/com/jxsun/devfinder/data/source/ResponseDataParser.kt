@@ -1,5 +1,6 @@
 package com.jxsun.devfinder.data.source
 
+import com.jxsun.devfinder.data.source.ResponseDataParser.Companion.NEXT_LINK
 import com.jxsun.devfinder.model.exception.ClientException
 import com.jxsun.devfinder.model.exception.ServerException
 import com.jxsun.devfinder.model.exception.UnknownAccessException
@@ -10,9 +11,11 @@ import timber.log.Timber
 import java.util.regex.Pattern
 
 data class ResponseData<T>(
-        val nextSinceIdx: Int,
+        val link: Map<String, Int>?,
         val data: T?
-)
+) {
+    fun getNextSinceIndex(): Int = link?.get(NEXT_LINK) ?: 0
+}
 
 /**
  * The parser to parse the [GitHubService]'s API responses.
@@ -36,13 +39,13 @@ class ResponseDataParser<T> {
                 }
 
                 val link = response.headers().get(LINK_HEADER)
-                        .extractLinks()
-                        .also {
+                        ?.extractLinks()
+                        ?.also {
                             Timber.d("link: next=${it[NEXT_LINK]}")
                         }
 
                 Single.just(ResponseData(
-                        nextSinceIdx = link[NEXT_LINK] ?: 0,
+                        link = link,
                         data = response.body()
                 ))
             }
@@ -52,7 +55,7 @@ class ResponseDataParser<T> {
     companion object {
         private val LINK_PATTERN = Pattern.compile("<([^>]*)>[\\s]*;[\\s]*rel=\"([a-zA-Z0-9]+)\"")
         private const val LINK_HEADER = "Link"
-        private const val NEXT_LINK = "next"
+        const val NEXT_LINK = "next"
 
         private fun String?.extractLinks(): Map<String, Int> {
             val links = mutableMapOf<String, Int>()

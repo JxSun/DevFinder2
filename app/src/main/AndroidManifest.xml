@@ -27,6 +27,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".feature.devdetail.DevDetailActivity" />
+
     </application>
 
 </manifest>
