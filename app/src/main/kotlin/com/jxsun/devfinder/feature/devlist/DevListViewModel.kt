@@ -1,78 +1,30 @@
 package com.jxsun.devfinder.feature.devlist
 
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jxsun.devfinder.base.BaseViewModel
 import com.jxsun.devfinder.base.core.ViewModelContract
-import com.jxsun.devfinder.util.extension.plusAssign
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
 /**
  * The [ViewModel] to cooperate with the list page UI.
  */
 class DevListViewModel(
-        private val actionProcessor: DevListActionProcessor
-) : ViewModelContract<DevListUiEvent, DevListUiState>() {
-
-    private val uiEventSubject = PublishSubject.create<DevListUiEvent>()
-    private val disposables = CompositeDisposable()
-
-    private lateinit var _state: MutableLiveData<DevListUiState>
+        actionProcessor: DevListActionProcessor
+) : BaseViewModel<DevListUiEvent, DevListAction, DevListResult, DevListUiState>(actionProcessor),
+        ViewModelContract<DevListUiEvent, DevListUiState> {
 
     // To enable replacing the idle state in unit test.
     @VisibleForTesting
-    var idleState = DevListUiState.IDLE
+    override var idleState = DevListUiState.IDLE
 
     /**
-     * Enables the UI to notify [DevListUiEvent]s to the business logic.
+     * @see [BaseViewModel]
      */
-    override fun fireEvent(event: DevListUiEvent) {
-        uiEventSubject.onNext(event)
-    }
-
-    /**
-     * The live data to reflect the changes of [DevListUiState]. It internally wraps a Rx stream to
-     * receive the processing results from the business logic.
-     */
-    override val state: LiveData<DevListUiState>
-        get() {
-            if (!::_state.isInitialized) {
-                Timber.d("setup state binding")
-                _state = MutableLiveData()
-
-                disposables += uiEventSubject
-                        .compose(uiEventFilter)
-                        .map(this::actionFromUiEvent)
-                        .compose(actionProcessor.process)
-                        .scan(idleState, uiStateReducer)
-                        .distinctUntilChanged()
-                        .replay(1)
-                        .autoConnect(0)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            _state.value = it
-                        }
-            }
-            return _state
-        }
-
-    override fun onCleared() {
-        Timber.d("DevListViewModel cleared")
-        super.onCleared()
-        disposables.clear()
-    }
-
-    /**
-     * A filter to help ban unwanted [DevListUiEvent].
-     */
-    private val uiEventFilter = ObservableTransformer<DevListUiEvent, DevListUiEvent> {
+    override val uiEventFilter = ObservableTransformer<DevListUiEvent, DevListUiEvent> {
         it.publish { shared ->
             Observable.merge(
                     shared.ofType(DevListUiEvent.InitialEvent::class.java).take(1),
@@ -82,9 +34,9 @@ class DevListViewModel(
     }
 
     /**
-     * Updates the UI state by referencing the latest result.
+     * @see [BaseViewModel]
      */
-    private val uiStateReducer =
+    override val uiStateReducer =
             BiFunction<DevListUiState, DevListResult, DevListUiState> { prevState, result ->
                 Timber.d("result: $result")
                 when (result) {
@@ -108,9 +60,9 @@ class DevListViewModel(
             }
 
     /**
-     * Maps the input UI events to actions.
+     * @see [BaseViewModel]
      */
-    private fun actionFromUiEvent(uiEvent: DevListUiEvent): DevListAction {
+    override fun actionFromUiEvent(uiEvent: DevListUiEvent): DevListAction {
         return when (uiEvent) {
             is DevListUiEvent.InitialEvent -> DevListAction.LoadUsersAction(sinceIndex = 0)
             is DevListUiEvent.LoadMoreEvent -> {
