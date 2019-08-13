@@ -2,8 +2,8 @@ package com.jxsun.devfinder.di
 
 import com.jxsun.devfinder.data.repository.GitHubUserRepository
 import com.jxsun.devfinder.data.source.GitHubService
-import com.jxsun.devfinder.data.source.RemoteUserDataMapper
 import com.jxsun.devfinder.data.source.RemoteDataSource
+import com.jxsun.devfinder.data.source.RemoteUserDataMapper
 import com.jxsun.devfinder.data.source.RemoteUserDetailDataMapper
 import com.jxsun.devfinder.feature.devdetail.DevDetailActionProcessor
 import com.jxsun.devfinder.feature.devdetail.DevDetailViewModel
@@ -21,10 +21,10 @@ val appModule = module {
 
     single {
         RemoteDataSource(
-                gitHubService = get(),
-                remoteUserDataMapper = RemoteUserDataMapper(),
-                remoteUserDetailDataMapper = RemoteUserDetailDataMapper(),
-                networkChecker = get()
+            gitHubService = get(),
+            remoteUserDataMapper = RemoteUserDataMapper(),
+            remoteUserDetailDataMapper = RemoteUserDetailDataMapper(),
+            networkChecker = get()
         )
     }
 

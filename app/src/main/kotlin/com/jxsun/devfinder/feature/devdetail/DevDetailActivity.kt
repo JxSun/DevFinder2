@@ -15,7 +15,11 @@ class DevDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dev_detail)
 
         supportFragmentManager.transaction {
-            it.replace(R.id.contentFrame, DevDetailFragment.newInstance(getBundledUser()), DevDetailFragment.TAG)
+            it.replace(
+                R.id.contentFrame,
+                DevDetailFragment.newInstance(getBundledUser()),
+                DevDetailFragment.TAG
+            )
         }
     }
 
@@ -28,8 +32,8 @@ class DevDetailActivity : AppCompatActivity() {
 
         fun start(activity: Activity, user: GitHubUser) {
             activity.startActivity(
-                    Intent(activity, DevDetailActivity::class.java)
-                            .putExtra(KEY_USER, user)
+                Intent(activity, DevDetailActivity::class.java)
+                    .putExtra(KEY_USER, user)
             )
         }
     }

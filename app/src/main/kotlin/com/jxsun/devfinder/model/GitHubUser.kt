@@ -8,8 +8,8 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class GitHubUser(
-        val id: Long,
-        val loginName: String,
-        val avatarUrl: String,
-        val siteAdmin: Boolean
-): Parcelable
+    val id: Long,
+    val loginName: String,
+    val avatarUrl: String,
+    val siteAdmin: Boolean
+) : Parcelable

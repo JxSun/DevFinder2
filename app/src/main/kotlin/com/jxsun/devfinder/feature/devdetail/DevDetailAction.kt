@@ -11,6 +11,6 @@ sealed class DevDetailAction : Action {
      * Gets the user's detailed info by the given [login].
      */
     data class GetUserDetailAction(
-            val login: String
+        val login: String
     ) : DevDetailAction()
 }

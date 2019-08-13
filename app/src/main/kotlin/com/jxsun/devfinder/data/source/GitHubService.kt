@@ -22,9 +22,9 @@ interface GitHubService {
      */
     @GET("users")
     fun getAllUsers(
-            @Query("since") since: Int,
-            @Query("client_id") clientId: String = BuildConfig.CLIENT_ID,
-            @Query("client_secret") clientSecret: String = BuildConfig.CLIENT_SECRET
+        @Query("since") since: Int,
+        @Query("client_id") clientId: String = BuildConfig.CLIENT_ID,
+        @Query("client_secret") clientSecret: String = BuildConfig.CLIENT_SECRET
     ): Single<Response<List<UserResponse>>>
 
     /**
@@ -42,25 +42,25 @@ interface GitHubService {
 
         fun create(customOkHttpClient: OkHttpClient? = null): GitHubService {
             return Retrofit.Builder()
-                    .baseUrl("https://api.github.com")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(customOkHttpClient ?: createDefaultOkHttpClient())
-                    .build()
-                    .create(GitHubService::class.java)
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(customOkHttpClient ?: createDefaultOkHttpClient())
+                .build()
+                .create(GitHubService::class.java)
         }
 
         private fun createDefaultOkHttpClient(): OkHttpClient {
             return OkHttpClient.Builder()
-                    .apply {
-                        if (BuildConfig.DEBUG) {
-                            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                                level = HttpLoggingInterceptor.Level.BODY
-                            }
-                            addInterceptor(loggingInterceptor)
+                .apply {
+                    if (BuildConfig.DEBUG) {
+                        val loggingInterceptor = HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.BODY
                         }
+                        addInterceptor(loggingInterceptor)
                     }
-                    .build()
+                }
+                .build()
         }
     }
 }

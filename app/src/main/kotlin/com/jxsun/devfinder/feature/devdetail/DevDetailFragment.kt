@@ -49,8 +49,8 @@ class DevDetailFragment : BaseFragment<DevDetailUiEvent, DevDetailUiState, DevDe
         } else {
             uiState.userDetail?.let {
                 GlideApp.with(this)
-                        .load(it.avatarUrl)
-                        .into(avatar)
+                    .load(it.avatarUrl)
+                    .into(avatar)
 
                 name.text = it.name
                 bio.text = it.bio

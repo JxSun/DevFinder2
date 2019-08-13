@@ -49,12 +49,12 @@ class DevListViewModelTest {
         val processedResult = ObservableTransformer<DevListAction, DevListResult> {
             it.flatMap {
                 Observable.fromArray(
-                        DevListResult.LoadUsersResult(
-                                isLoading = true, devList = emptyList(), nextSinceIdx = 0, error = null
-                        ),
-                        DevListResult.LoadUsersResult(
-                                isLoading = false, devList = listOf(user), nextSinceIdx = 50, error = null
-                        )
+                    DevListResult.LoadUsersResult(
+                        isLoading = true, devList = emptyList(), nextSinceIdx = 0, error = null
+                    ),
+                    DevListResult.LoadUsersResult(
+                        isLoading = false, devList = listOf(user), nextSinceIdx = 50, error = null
+                    )
                 )
             }
         }
@@ -80,18 +80,24 @@ class DevListViewModelTest {
     @Test
     fun `process load more UI event`() {
         val user1 = GitHubUser(id = 10, loginName = "Bill Gates", avatarUrl = "", siteAdmin = true)
-        val user2 = GitHubUser(id = 11, loginName = "Melinda Gates", avatarUrl = "", siteAdmin = false)
-        val idleState = DevListUiState(isLoading = false, devList = listOf(user1), nextSinceIdx = 11, error = null)
+        val user2 =
+            GitHubUser(id = 11, loginName = "Melinda Gates", avatarUrl = "", siteAdmin = false)
+        val idleState = DevListUiState(
+            isLoading = false,
+            devList = listOf(user1),
+            nextSinceIdx = 11,
+            error = null
+        )
         val processedResult = ObservableTransformer<DevListAction, DevListResult> {
             it.flatMap {
                 Observable.fromArray(
-                        // To simulate there's already an user before loading more.
-                        DevListResult.LoadUsersResult(
-                                isLoading = true, devList = listOf(user1), nextSinceIdx = 11, error = null
-                        ),
-                        DevListResult.LoadUsersResult(
-                                isLoading = false, devList = listOf(user2), nextSinceIdx = 50, error = null
-                        )
+                    // To simulate there's already an user before loading more.
+                    DevListResult.LoadUsersResult(
+                        isLoading = true, devList = listOf(user1), nextSinceIdx = 11, error = null
+                    ),
+                    DevListResult.LoadUsersResult(
+                        isLoading = false, devList = listOf(user2), nextSinceIdx = 50, error = null
+                    )
                 )
             }
         }

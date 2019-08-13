@@ -11,6 +11,6 @@ sealed class DevListAction : Action {
      * Loads users list starting since the target index.
      */
     data class LoadUsersAction(
-            val sinceIndex: Int
+        val sinceIndex: Int
     ) : DevListAction()
 }

@@ -52,6 +52,10 @@ androidExtensions {
     experimental = true
 }
 
+configurations {
+    ktlint
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -81,6 +85,8 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:${versions.timber}"
 
+    ktlint "com.pinterest:ktlint:0.34.2"
+
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${versions.leakCanary}"
 
     testImplementation "junit:junit:${versions.junit}"
@@ -88,4 +94,19 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:${versions.archCoreTesting}"
     androidTestImplementation "androidx.test:runner:${versions.testRunner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    main = "com.pinterest.ktlint.Main"
+    classpath = configurations.ktlint
+    args "-F", "src/**/*.kt"
 }
