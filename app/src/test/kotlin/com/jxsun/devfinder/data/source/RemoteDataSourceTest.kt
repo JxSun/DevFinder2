@@ -1,6 +1,8 @@
 package com.jxsun.devfinder.data.source
 
+import com.jxsun.devfinder.model.exception.ClientException
 import com.jxsun.devfinder.model.exception.NoConnectionException
+import com.jxsun.devfinder.model.exception.ServerException
 import com.jxsun.devfinder.util.NetworkChecker
 import com.nhaarman.mockitokotlin2.doReturn
 import io.reactivex.Single
@@ -95,6 +97,32 @@ class RemoteDataSourceTest {
     }
 
     @Test
+    fun `fetch users failed due to client error`() {
+        doReturn(true).`when`(networkChecker).isNetworkConnected()
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(400)
+        )
+
+        val testObserver = sut.getUsers(since = 1).test()
+
+        testObserver.assertError { it is ClientException }
+    }
+
+    @Test
+    fun `fetch users failed due to server error`() {
+        doReturn(true).`when`(networkChecker).isNetworkConnected()
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(500)
+        )
+
+        val testObserver = sut.getUsers(since = 1).test()
+
+        testObserver.assertError { it is ServerException }
+    }
+
+    @Test
     fun `fetch user detail but has no connection`() {
         doReturn(false).`when`(networkChecker).isNetworkConnected()
 
@@ -152,6 +180,32 @@ class RemoteDataSourceTest {
         testObserver.assertValue {
             it.userDetail.name == "Tom Preston-Werner"
         }
+    }
+
+    @Test
+    fun `fetch user detail failed due to client error`() {
+        doReturn(true).`when`(networkChecker).isNetworkConnected()
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(400)
+        )
+
+        val testObserver = sut.getUserDetail(login = "mojombo").test()
+
+        testObserver.assertError { it is ClientException }
+    }
+
+    @Test
+    fun `fetch user detail failed due to server error`() {
+        doReturn(true).`when`(networkChecker).isNetworkConnected()
+
+        mockWebServer.enqueue(
+            MockResponse().setResponseCode(500)
+        )
+
+        val testObserver = sut.getUserDetail(login = "mojombo").test()
+
+        testObserver.assertError { it is ServerException }
     }
 }
 
