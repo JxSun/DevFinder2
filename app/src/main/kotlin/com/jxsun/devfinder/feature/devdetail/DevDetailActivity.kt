@@ -14,12 +14,14 @@ class DevDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dev_detail)
 
-        supportFragmentManager.transaction {
-            it.replace(
-                R.id.contentFrame,
-                DevDetailFragment.newInstance(getBundledUser()),
-                DevDetailFragment.TAG
-            )
+        if (supportFragmentManager.findFragmentByTag(DevDetailFragment.TAG) == null) {
+            supportFragmentManager.transaction {
+                it.replace(
+                    R.id.contentFrame,
+                    DevDetailFragment.newInstance(getBundledUser()),
+                    DevDetailFragment.TAG
+                )
+            }
         }
     }
 

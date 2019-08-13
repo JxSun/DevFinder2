@@ -11,8 +11,10 @@ class DevListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dev_list)
 
-        supportFragmentManager.transaction {
-            it.replace(R.id.contentFrame, DevListFragment.newInstance(), DevListFragment.TAG)
+        if (supportFragmentManager.findFragmentByTag(DevListFragment.TAG) == null) {
+            supportFragmentManager.transaction {
+                it.replace(R.id.contentFrame, DevListFragment.newInstance(), DevListFragment.TAG)
+            }
         }
     }
 }
