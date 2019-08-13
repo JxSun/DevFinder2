@@ -4,8 +4,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 
 inline fun FragmentManager.transaction(
-        allowStateLoss: Boolean = true,
-        block: (FragmentTransaction) -> Unit
+    allowStateLoss: Boolean = true,
+    block: (FragmentTransaction) -> Unit
 ) {
     beginTransaction().apply {
         block(this)

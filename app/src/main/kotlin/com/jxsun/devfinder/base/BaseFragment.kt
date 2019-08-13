@@ -39,7 +39,11 @@ abstract class BaseFragment<E : UiEvent, S : UiState, VM : ViewModelContract<E, 
      */
     abstract fun renderUi(uiState: S)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(layoutResource(), container, false)
     }
 
@@ -48,8 +52,8 @@ abstract class BaseFragment<E : UiEvent, S : UiState, VM : ViewModelContract<E, 
 
         // setup state change monitor
         bindViewModel().state.observe(
-                viewLifecycleOwner,
-                Observer { renderUi(it) }
+            viewLifecycleOwner,
+            Observer { renderUi(it) }
         )
 
         onInitUi()

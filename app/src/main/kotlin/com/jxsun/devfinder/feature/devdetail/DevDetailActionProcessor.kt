@@ -11,7 +11,7 @@ import timber.log.Timber
  * [DevDetailResult]s.
  */
 class DevDetailActionProcessor(
-        private val gitHubUserRepository: GitHubUserRepository
+    private val gitHubUserRepository: GitHubUserRepository
 ) : ActionProcessor<DevDetailAction, DevDetailResult> {
 
     override val process: ObservableTransformer<DevDetailAction, DevDetailResult>
@@ -19,35 +19,35 @@ class DevDetailActionProcessor(
             return ObservableTransformer { actions ->
                 actions.publish { shared ->
                     Observable.merge(
-                            shared.ofType(DevDetailAction.GetUserDetailAction::class.java)
-                                    .compose(processLoadUsersAction),
-                            shared.filter {
-                                it !is DevDetailAction.GetUserDetailAction
-                            }.flatMap {
-                                Observable.error<DevDetailResult>(
-                                        IllegalStateException("Unknown action type: $it")
-                                )
-                            }
+                        shared.ofType(DevDetailAction.GetUserDetailAction::class.java)
+                            .compose(processLoadUsersAction),
+                        shared.filter {
+                            it !is DevDetailAction.GetUserDetailAction
+                        }.flatMap {
+                            Observable.error<DevDetailResult>(
+                                IllegalStateException("Unknown action type: $it")
+                            )
+                        }
                     )
                 }
             }
         }
 
     private val processLoadUsersAction =
-            ObservableTransformer<DevDetailAction.GetUserDetailAction, DevDetailResult.GetUserDetailResult> { upstream ->
-                upstream.flatMap<DevDetailResult.GetUserDetailResult> { action ->
-                    Timber.v("processor: fetch by ${action.login}")
-                    gitHubUserRepository.fetchUserDetail(login = action.login)
-                            .toObservable()
-                            .map {
-                                DevDetailResult.GetUserDetailResult.success(
-                                        userDetail = it.user
-                                )
-                            }
-                            .onErrorResumeNext { error: Throwable ->
-                                Observable.just(DevDetailResult.GetUserDetailResult.failure(error))
-                            }
-                            .startWith(DevDetailResult.GetUserDetailResult.inFlight())
-                }
+        ObservableTransformer<DevDetailAction.GetUserDetailAction, DevDetailResult.GetUserDetailResult> { upstream ->
+            upstream.flatMap<DevDetailResult.GetUserDetailResult> { action ->
+                Timber.v("processor: fetch by ${action.login}")
+                gitHubUserRepository.fetchUserDetail(login = action.login)
+                    .toObservable()
+                    .map {
+                        DevDetailResult.GetUserDetailResult.success(
+                            userDetail = it.user
+                        )
+                    }
+                    .onErrorResumeNext { error: Throwable ->
+                        Observable.just(DevDetailResult.GetUserDetailResult.failure(error))
+                    }
+                    .startWith(DevDetailResult.GetUserDetailResult.inFlight())
             }
+        }
 }

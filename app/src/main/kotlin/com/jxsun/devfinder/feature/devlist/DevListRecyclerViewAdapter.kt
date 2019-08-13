@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.item_dev_list.view.*
 
 typealias ClickUserListener = (GitHubUser) -> Unit
 
-class DevListRecyclerViewAdapter : ListAdapter<GitHubUser, DevListRecyclerViewAdapter.ViewHolder>(PlantDiffCallback()) {
+class DevListRecyclerViewAdapter :
+    ListAdapter<GitHubUser, DevListRecyclerViewAdapter.ViewHolder>(PlantDiffCallback()) {
 
     private var clickUserListener: ClickUserListener? = null
 
@@ -25,10 +26,10 @@ class DevListRecyclerViewAdapter : ListAdapter<GitHubUser, DevListRecyclerViewAd
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_dev_list, parent, false)
-                .run {
-                    ViewHolder(this)
-                }
+            .inflate(R.layout.item_dev_list, parent, false)
+            .run {
+                ViewHolder(this)
+            }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -37,7 +38,7 @@ class DevListRecyclerViewAdapter : ListAdapter<GitHubUser, DevListRecyclerViewAd
     }
 
     class ViewHolder(
-            itemView: View
+        itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         private val avatar: ImageView = itemView.avatar
         private val login: TextView = itemView.loginName
@@ -53,9 +54,9 @@ class DevListRecyclerViewAdapter : ListAdapter<GitHubUser, DevListRecyclerViewAd
         fun bind(user: GitHubUser, clickListener: ClickUserListener?) {
             login.text = user.loginName
             GlideApp.with(itemView.context)
-                    .load(user.avatarUrl)
-                    .placeholder(R.drawable.ic_launcher_foreground)
-                    .into(avatar)
+                .load(user.avatarUrl)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(avatar)
             staffBadge.visibility = if (user.siteAdmin) View.VISIBLE else View.GONE
             clickListenerWrapper.bind(clickListener, user)
         }

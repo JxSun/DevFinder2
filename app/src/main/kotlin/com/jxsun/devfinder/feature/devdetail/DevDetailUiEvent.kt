@@ -11,6 +11,6 @@ sealed class DevDetailUiEvent : UiEvent {
      * The getting detailed info event.
      */
     data class GetUserDetailEvent(
-            val login: String
+        val login: String
     ) : DevDetailUiEvent()
 }

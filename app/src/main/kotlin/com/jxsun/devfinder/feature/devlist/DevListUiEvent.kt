@@ -12,9 +12,8 @@ sealed class DevListUiEvent : UiEvent {
      */
     object InitialEvent : DevListUiEvent()
 
-
     /**
      * Loads more users data.
      */
-    object LoadMoreEvent: DevListUiEvent()
+    object LoadMoreEvent : DevListUiEvent()
 }

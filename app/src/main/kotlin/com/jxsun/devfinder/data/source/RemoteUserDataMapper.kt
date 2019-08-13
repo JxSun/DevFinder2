@@ -10,19 +10,19 @@ class RemoteUserDataMapper : Mapper<GitHubUser, UserResponse> {
 
     override fun toModel(implData: UserResponse): GitHubUser {
         return GitHubUser(
-                id = implData.id,
-                loginName = implData.loginName,
-                avatarUrl = implData.avatarUrl,
-                siteAdmin = implData.siteAdmin
+            id = implData.id,
+            loginName = implData.loginName,
+            avatarUrl = implData.avatarUrl,
+            siteAdmin = implData.siteAdmin
         )
     }
 
     override fun fromModel(model: GitHubUser): UserResponse {
         return UserResponse(
-                id = model.id,
-                loginName = model.loginName,
-                avatarUrl = model.avatarUrl,
-                siteAdmin = model.siteAdmin
+            id = model.id,
+            loginName = model.loginName,
+            avatarUrl = model.avatarUrl,
+            siteAdmin = model.siteAdmin
         )
     }
 }

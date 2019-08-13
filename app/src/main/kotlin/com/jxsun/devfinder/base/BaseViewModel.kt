@@ -4,7 +4,12 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jxsun.devfinder.base.core.*
+import com.jxsun.devfinder.base.core.Action
+import com.jxsun.devfinder.base.core.ActionProcessor
+import com.jxsun.devfinder.base.core.Result
+import com.jxsun.devfinder.base.core.UiEvent
+import com.jxsun.devfinder.base.core.UiState
+import com.jxsun.devfinder.base.core.ViewModelContract
 import com.jxsun.devfinder.util.extension.plusAssign
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,7 +19,7 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
 abstract class BaseViewModel<E : UiEvent, A : Action, R : Result, S : UiState>(
-        protected val actionProcessor: ActionProcessor<A, R>
+    protected val actionProcessor: ActionProcessor<A, R>
 ) : ViewModel(), ViewModelContract<E, S> {
 
     private val uiEventSubject = PublishSubject.create<E>()
@@ -42,20 +47,19 @@ abstract class BaseViewModel<E : UiEvent, A : Action, R : Result, S : UiState>(
 
                 // setup MVI rx stream
                 disposables += uiEventSubject
-                        .compose(uiEventFilter)
-                        .map(this::actionFromUiEvent)
-                        .compose(actionProcessor.process)
-                        .scan(idleState, uiStateReducer)
-                        .distinctUntilChanged()
-                        .replay(1)
-                        .autoConnect(0)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            _state.value = it
-                        }
+                    .compose(uiEventFilter)
+                    .map(this::actionFromUiEvent)
+                    .compose(actionProcessor.process)
+                    .scan(idleState, uiStateReducer)
+                    .distinctUntilChanged()
+                    .replay(1)
+                    .autoConnect(0)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        _state.value = it
+                    }
             }
             return _state
-
         }
 
     @CallSuper

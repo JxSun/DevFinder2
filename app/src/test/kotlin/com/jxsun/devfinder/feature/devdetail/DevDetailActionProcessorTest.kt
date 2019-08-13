@@ -12,7 +12,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class DevListActionProcessorTest {
+class DevDetailActionProcessorTest {
 
     @Rule
     @JvmField
@@ -24,14 +24,14 @@ class DevListActionProcessorTest {
     private lateinit var sut: DevDetailActionProcessor
 
     private val userDetail = GitHubUserDetail(
-            id = 100,
-            loginName = "Josh",
-            name = "Joshua Sun",
-            bio = "An Android developer",
-            avatarUrl = "",
-            siteAdmin = true,
-            blog = "jxsun.github.io",
-            location = "Mountain View, CA"
+        id = 100,
+        loginName = "Josh",
+        name = "Joshua Sun",
+        bio = "An Android developer",
+        avatarUrl = "",
+        siteAdmin = true,
+        blog = "jxsun.github.io",
+        location = "Mountain View, CA"
     )
 
     @Before
@@ -44,31 +44,59 @@ class DevListActionProcessorTest {
     @Test
     fun `perform get detailed info action and fetch data back successfully`() {
         doReturn(Single.just(GitHubUserRepository.FetchUserDetailResult(user = userDetail)))
-                .`when`(repository)
-                .fetchUserDetail("Josh")
+            .`when`(repository)
+            .fetchUserDetail("Josh")
 
         val testObserver = Observable.just(DevDetailAction.GetUserDetailAction(login = "Josh"))
-                .compose(sut.process)
-                .test()
+            .compose(sut.process)
+            .test()
 
         testObserver.assertValueCount(2)
-        testObserver.assertValueAt(0, DevDetailResult.GetUserDetailResult(isLoading = true, userDetail = null, error = null))
-        testObserver.assertValueAt(1, DevDetailResult.GetUserDetailResult(isLoading = false, userDetail = userDetail, error = null))
+        testObserver.assertValueAt(
+            0,
+            DevDetailResult.GetUserDetailResult(
+                isLoading = true,
+                userDetail = null,
+                error = null
+            )
+        )
+        testObserver.assertValueAt(
+            1,
+            DevDetailResult.GetUserDetailResult(
+                isLoading = false,
+                userDetail = userDetail,
+                error = null
+            )
+        )
     }
 
     @Test
     fun `perform get detailed info action and fetch data back failed`() {
         val exception = Exception("test")
         doReturn(Single.fromCallable { throw exception })
-                .`when`(repository)
-                .fetchUserDetail("Josh")
+            .`when`(repository)
+            .fetchUserDetail("Josh")
 
         val testObserver = Observable.just(DevDetailAction.GetUserDetailAction(login = "Josh"))
-                .compose(sut.process)
-                .test()
+            .compose(sut.process)
+            .test()
 
         testObserver.assertValueCount(2)
-        testObserver.assertValueAt(0, DevDetailResult.GetUserDetailResult(isLoading = true, userDetail = null, error = null))
-        testObserver.assertValueAt(1, DevDetailResult.GetUserDetailResult(isLoading = false, userDetail = null, error = exception))
+        testObserver.assertValueAt(
+            0,
+            DevDetailResult.GetUserDetailResult(
+                isLoading = true,
+                userDetail = null,
+                error = null
+            )
+        )
+        testObserver.assertValueAt(
+            1,
+            DevDetailResult.GetUserDetailResult(
+                isLoading = false,
+                userDetail = null,
+                error = exception
+            )
+        )
     }
 }

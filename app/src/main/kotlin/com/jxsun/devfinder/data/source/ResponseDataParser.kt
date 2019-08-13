@@ -6,13 +6,13 @@ import com.jxsun.devfinder.model.exception.ServerException
 import com.jxsun.devfinder.model.exception.UnknownAccessException
 import io.reactivex.Single
 import io.reactivex.SingleTransformer
+import java.util.regex.Pattern
 import retrofit2.Response
 import timber.log.Timber
-import java.util.regex.Pattern
 
 data class ResponseData<T>(
-        val link: Map<String, Int>?,
-        val data: T?
+    val link: Map<String, Int>?,
+    val data: T?
 ) {
     fun getNextSinceIndex(): Int = link?.get(NEXT_LINK) ?: 0
 }
@@ -39,15 +39,17 @@ class ResponseDataParser<T> {
                 }
 
                 val link = response.headers().get(LINK_HEADER)
-                        ?.extractLinks()
-                        ?.also {
-                            Timber.d("link: next=${it[NEXT_LINK]}")
-                        }
+                    ?.extractLinks()
+                    ?.also {
+                        Timber.d("link: next=${it[NEXT_LINK]}")
+                    }
 
-                Single.just(ResponseData(
+                Single.just(
+                    ResponseData(
                         link = link,
                         data = response.body()
-                ))
+                    )
+                )
             }
         }
     }
@@ -68,10 +70,10 @@ class ResponseDataParser<T> {
                     if (key == NEXT_LINK) {
                         links[key] = try {
                             matcher.group(1)
-                                    .also { Timber.v("parsing link url: $it") }
-                                    .substringAfter("since=")
-                                    .substringBefore("&")
-                                    .toInt()
+                                .also { Timber.v("parsing link url: $it") }
+                                .substringAfter("since=")
+                                .substringBefore("&")
+                                .toInt()
                         } catch (e: Exception) {
                             break
                         }

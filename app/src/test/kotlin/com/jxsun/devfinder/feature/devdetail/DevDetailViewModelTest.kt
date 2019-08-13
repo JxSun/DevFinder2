@@ -46,24 +46,24 @@ class DevDetailViewModelTest {
     @Test
     fun `process get detailed info event`() {
         val userDetail = GitHubUserDetail(
-                id = 100,
-                loginName = "Josh",
-                name = "Joshua Sun",
-                bio = "An Android developer",
-                avatarUrl = "",
-                siteAdmin = true,
-                blog = "jxsun.github.io",
-                location = "Mountain View, CA"
+            id = 100,
+            loginName = "Josh",
+            name = "Joshua Sun",
+            bio = "An Android developer",
+            avatarUrl = "",
+            siteAdmin = true,
+            blog = "jxsun.github.io",
+            location = "Mountain View, CA"
         )
         val processedResult = ObservableTransformer<DevDetailAction, DevDetailResult> {
             it.flatMap {
                 Observable.fromArray(
-                        DevDetailResult.GetUserDetailResult(
-                                isLoading = true, userDetail = null, error = null
-                        ),
-                        DevDetailResult.GetUserDetailResult(
-                                isLoading = false, userDetail = userDetail, error = null
-                        )
+                    DevDetailResult.GetUserDetailResult(
+                        isLoading = true, userDetail = null, error = null
+                    ),
+                    DevDetailResult.GetUserDetailResult(
+                        isLoading = false, userDetail = userDetail, error = null
+                    )
                 )
             }
         }
