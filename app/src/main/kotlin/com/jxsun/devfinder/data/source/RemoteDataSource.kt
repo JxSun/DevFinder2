@@ -6,6 +6,8 @@ import com.jxsun.devfinder.model.exception.NoConnectionException
 import com.jxsun.devfinder.util.NetworkChecker
 import io.reactivex.Single
 
+private const val PER_PAGE = 20
+
 /**
  * The data provider which accesses the server to offer data.
  */
@@ -23,7 +25,7 @@ class RemoteDataSource(
         since: Int
     ): Single<UserListData> {
         return if (networkChecker.isNetworkConnected()) {
-            return gitHubService.getAllUsers(since)
+            return gitHubService.getAllUsers(since, PER_PAGE)
                 .compose(userListResponseDataParser.parse())
                 .map {
                     UserListData(

@@ -220,10 +220,11 @@ class GitHubServiceStub(baseUrl: HttpUrl) : GitHubService {
 
     override fun getAllUsers(
         since: Int,
+        perPage: Int,
         clientId: String,
         clientSecret: String
     ): Single<Response<List<UserResponse>>> {
-        return service.getAllUsers(since, clientId, clientSecret)
+        return service.getAllUsers(since, 1, clientId, clientSecret)
     }
 
     override fun getUser(loginName: String): Single<Response<UserDetailResponse>> {
