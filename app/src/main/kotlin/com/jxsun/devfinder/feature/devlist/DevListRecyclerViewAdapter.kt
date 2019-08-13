@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
 import com.jxsun.devfinder.R
 import com.jxsun.devfinder.model.GitHubUser
 import com.jxsun.devfinder.util.GlideApp
@@ -55,6 +56,7 @@ class DevListRecyclerViewAdapter :
             login.text = user.loginName
             GlideApp.with(itemView.context)
                 .load(user.avatarUrl)
+                .apply(RequestOptions.circleCropTransform())
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(avatar)
             staffBadge.visibility = if (user.siteAdmin) View.VISIBLE else View.GONE

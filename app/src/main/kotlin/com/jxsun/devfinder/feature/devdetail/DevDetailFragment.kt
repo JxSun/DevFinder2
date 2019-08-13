@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.request.RequestOptions
 import com.jxsun.devfinder.R
 import com.jxsun.devfinder.base.BaseFragment
 import com.jxsun.devfinder.model.GitHubUser
@@ -50,6 +51,8 @@ class DevDetailFragment : BaseFragment<DevDetailUiEvent, DevDetailUiState, DevDe
             uiState.userDetail?.let {
                 GlideApp.with(this)
                     .load(it.avatarUrl)
+                    .apply(RequestOptions.circleCropTransform())
+                    .placeholder(R.drawable.ic_launcher_foreground)
                     .into(avatar)
 
                 name.text = it.name
