@@ -70,32 +70,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
-    <TextView
-        android:id="@+id/login"
+    <LinearLayout
+        android:id="@+id/personInfoContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginBottom="4dp"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/staffBadge"
-        app:layout_constraintStart_toEndOf="@+id/personIcon"
-        app:layout_constraintTop_toTopOf="@+id/personIcon" />
-
-    <TextView
-        android:id="@+id/staffBadge"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_staff_badge"
-        android:gravity="center"
-        android:text="@string/staff"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:visibility="gone"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/personIcon"
-        app:layout_constraintStart_toStartOf="@+id/login"
-        app:layout_constraintTop_toBottomOf="@+id/login" />
+        app:layout_constraintStart_toEndOf="@+id/personIcon"
+        app:layout_constraintTop_toTopOf="@+id/personIcon">
+
+        <TextView
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/staffBadge"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_staff_badge"
+            android:gravity="center"
+            android:text="@string/staff"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/placeIcon"
@@ -114,6 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/placeIcon"
         app:layout_constraintStart_toEndOf="@+id/placeIcon"

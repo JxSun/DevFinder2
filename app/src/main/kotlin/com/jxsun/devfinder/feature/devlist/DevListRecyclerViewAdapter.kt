@@ -13,32 +13,80 @@ import com.jxsun.devfinder.R
 import com.jxsun.devfinder.model.GitHubUser
 import com.jxsun.devfinder.util.GlideApp
 import kotlinx.android.synthetic.main.item_dev_list.view.*
+import kotlinx.android.synthetic.main.item_dev_list_title.view.*
+
+private const val ITEM_TYPE_TITLE = 0
+private const val ITEM_TYPE_USER = 1
 
 typealias ClickUserListener = (GitHubUser) -> Unit
 
 class DevListRecyclerViewAdapter :
-    ListAdapter<GitHubUser, DevListRecyclerViewAdapter.ViewHolder>(PlantDiffCallback()) {
+    ListAdapter<GitHubUser, RecyclerView.ViewHolder>(PlantDiffCallback()) {
 
     private var clickUserListener: ClickUserListener? = null
+
+    // To be used like a placeholder for the title item. See the explanation in the below
+    // overridden submitList().
+    private val dummyUser = GitHubUser(id = 0, loginName = "", avatarUrl = "", siteAdmin = false)
 
     fun setClickUserListener(listener: ClickUserListener) {
         clickUserListener = listener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_dev_list, parent, false)
-            .run {
-                ViewHolder(this)
+    override fun getItemViewType(position: Int): Int {
+        return when (position) {
+            0 -> ITEM_TYPE_TITLE
+            else -> ITEM_TYPE_USER
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            ITEM_TYPE_TITLE -> {
+                inflater.inflate(R.layout.item_dev_list_title, parent, false)
+                    .run {
+                        TitleViewHolder(this)
+                    }
             }
+            ITEM_TYPE_USER -> {
+                inflater.inflate(R.layout.item_dev_list, parent, false)
+                    .run {
+                        UserViewHolder(this)
+                    }
+            }
+            else -> throw IllegalStateException("Unknown item view type: $viewType")
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val user = getItem(position)
-        holder.bind(user, clickUserListener)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (getItemViewType(position) == ITEM_TYPE_USER) {
+            val user = getItem(position)
+            (holder as UserViewHolder).bind(user, clickUserListener)
+        }
     }
 
-    class ViewHolder(
+    override fun submitList(list: List<GitHubUser>?) {
+        // Because we have a title item which doesn't not belong to the calculation result of
+        // the business logic. To ensure the underlying AsyncListDiffer can correctly trigger data
+        // change events, we have to insert a dummy data as a placeholder for the title item into
+        // the list before submitting to AsyncListDiffer.
+        super.submitList(list?.toMutableList()?.apply {
+            add(0, dummyUser)
+        })
+    }
+
+    class TitleViewHolder(
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
+        private val title: TextView = itemView.usersTitle
+
+        init {
+            title.text = itemView.context.getString(R.string.users)
+        }
+    }
+
+    class UserViewHolder(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         private val avatar: ImageView = itemView.avatar
