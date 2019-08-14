@@ -2,6 +2,7 @@
     <string name="app_name">DevFinder</string>
 
     <string name="github_users">GitHub Users</string>
+    <string name="users">Users</string>
     <string name="staff">STAFF</string>
 
     <!-- Error messages -->
