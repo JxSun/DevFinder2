@@ -1,6 +1,6 @@
-package com.jxsun.devfinder.data.source
+package com.jxsun.devfinder.data.source.remote
 
-import com.jxsun.devfinder.data.source.ResponseDataParser.Companion.NEXT_LINK
+import com.jxsun.devfinder.data.source.remote.ResponseDataParser.Companion.NEXT_LINK
 import com.jxsun.devfinder.model.exception.ClientException
 import com.jxsun.devfinder.model.exception.ServerException
 import com.jxsun.devfinder.model.exception.UnknownAccessException

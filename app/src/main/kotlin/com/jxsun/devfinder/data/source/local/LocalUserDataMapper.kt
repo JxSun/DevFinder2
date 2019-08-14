@@ -1,14 +1,15 @@
-package com.jxsun.devfinder.data.source
+package com.jxsun.devfinder.data.source.local
 
 import com.jxsun.devfinder.data.repository.Mapper
+import com.jxsun.devfinder.data.source.local.database.GitHubUserEntity
 import com.jxsun.devfinder.model.GitHubUser
 
 /**
- * A mapper which provides mappings between [GitHubUser] and [UserResponse].
+ * A mapper which provides mappings between [GitHubUser] and [GitHubUserEntity].
  */
-class RemoteUserDataMapper : Mapper<GitHubUser, UserResponse> {
+class LocalUserDataMapper : Mapper<GitHubUser, GitHubUserEntity> {
 
-    override fun toModel(implData: UserResponse): GitHubUser {
+    override fun toModel(implData: GitHubUserEntity): GitHubUser {
         return GitHubUser(
             id = implData.id,
             loginName = implData.loginName,
@@ -17,8 +18,8 @@ class RemoteUserDataMapper : Mapper<GitHubUser, UserResponse> {
         )
     }
 
-    override fun fromModel(model: GitHubUser): UserResponse {
-        return UserResponse(
+    override fun fromModel(model: GitHubUser): GitHubUserEntity {
+        return GitHubUserEntity(
             id = model.id,
             loginName = model.loginName,
             avatarUrl = model.avatarUrl,

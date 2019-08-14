@@ -11,6 +11,6 @@ class NetworkChecker(
     fun isNetworkConnected(): Boolean {
         val networkInfo = ContextCompat.getSystemService(context, ConnectivityManager::class.java)
             ?.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
+        return (networkInfo != null && networkInfo.isConnected)
     }
 }
