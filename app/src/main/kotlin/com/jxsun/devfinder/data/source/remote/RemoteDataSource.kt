@@ -1,7 +1,6 @@
-package com.jxsun.devfinder.data.source
+package com.jxsun.devfinder.data.source.remote
 
-import com.jxsun.devfinder.model.GitHubUser
-import com.jxsun.devfinder.model.GitHubUserDetail
+import com.jxsun.devfinder.data.source.DataSource
 import com.jxsun.devfinder.model.exception.NoConnectionException
 import com.jxsun.devfinder.util.NetworkChecker
 import io.reactivex.Single
@@ -16,19 +15,21 @@ class RemoteDataSource(
     private val remoteUserDataMapper: RemoteUserDataMapper,
     private val remoteUserDetailDataMapper: RemoteUserDetailDataMapper,
     private val networkChecker: NetworkChecker
-) {
+) : DataSource {
 
-    private val userListResponseDataParser = ResponseDataParser<List<UserResponse>>()
-    private val userDetailResponseDataParser = ResponseDataParser<UserDetailResponse>()
+    private val userListResponseDataParser =
+        ResponseDataParser<List<UserResponse>>()
+    private val userDetailResponseDataParser =
+        ResponseDataParser<UserDetailResponse>()
 
     fun getUsers(
         since: Int
-    ): Single<UserListData> {
+    ): Single<DataSource.UserListData> {
         return if (networkChecker.isNetworkConnected()) {
             return gitHubService.getAllUsers(since, PER_PAGE)
                 .compose(userListResponseDataParser.parse())
                 .map {
-                    UserListData(
+                    DataSource.UserListData(
                         nextSinceIdx = it.getNextSinceIndex(),
                         users = it.data?.map(remoteUserDataMapper::toModel) ?: emptyList()
                     )
@@ -40,12 +41,12 @@ class RemoteDataSource(
 
     fun getUserDetail(
         login: String
-    ): Single<UserDetailData> {
+    ): Single<DataSource.UserDetailData> {
         return if (networkChecker.isNetworkConnected()) {
             return gitHubService.getUser(login)
                 .compose(userDetailResponseDataParser.parse())
                 .map {
-                    UserDetailData(
+                    DataSource.UserDetailData(
                         userDetail = it.data?.let { response ->
                             remoteUserDetailDataMapper.toModel(response)
                         } ?: throw Throwable("No available userDetail data!")
@@ -55,19 +56,4 @@ class RemoteDataSource(
             Single.error(NoConnectionException())
         }
     }
-
-    /**
-     * The representation of the provided user list data.
-     */
-    data class UserListData(
-        val nextSinceIdx: Int,
-        val users: List<GitHubUser>
-    )
-
-    /**
-     * The representation of the provided user detailed info data.
-     */
-    data class UserDetailData(
-        val userDetail: GitHubUserDetail
-    )
 }

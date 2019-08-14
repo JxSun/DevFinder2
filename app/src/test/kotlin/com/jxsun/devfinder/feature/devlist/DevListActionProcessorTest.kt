@@ -5,7 +5,6 @@ import com.jxsun.devfinder.data.repository.GitHubUserRepository
 import com.jxsun.devfinder.model.GitHubUser
 import com.nhaarman.mockitokotlin2.doReturn
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,7 +41,7 @@ class DevListActionProcessorTest {
     @Test
     fun `perform load more action and fetch data back successfully`() {
         doReturn(
-            Single.just(
+            Observable.just(
                 GitHubUserRepository.FetchUsersResult(
                     users = users,
                     nextSinceIdx = 50
@@ -80,7 +79,7 @@ class DevListActionProcessorTest {
     @Test
     fun `perform load more action and fetch data back failed`() {
         val exception = Exception("test")
-        doReturn(Single.fromCallable { throw exception })
+        doReturn(Observable.fromCallable { throw exception })
             .`when`(repository)
             .fetchUsers(49)
 

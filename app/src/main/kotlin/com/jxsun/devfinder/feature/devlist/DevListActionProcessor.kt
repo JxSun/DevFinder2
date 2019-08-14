@@ -38,7 +38,6 @@ class DevListActionProcessor(
             upstream.flatMap<DevListResult.LoadUsersResult> { action ->
                 Timber.v("processor: fetch index since ${action.sinceIndex}")
                 gitHubUserRepository.fetchUsers(since = action.sinceIndex)
-                    .toObservable()
                     .map {
                         DevListResult.LoadUsersResult.success(
                             devList = it.users,

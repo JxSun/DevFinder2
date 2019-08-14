@@ -39,7 +39,8 @@ class DevDetailViewModel(
                 is DevDetailResult.GetUserDetailResult -> {
                     when {
                         result.isLoading -> prevState.copy(
-                            isLoading = true
+                            isLoading = true,
+                            error = null
                         )
                         result.error != null -> prevState.copy(
                             isLoading = false,
